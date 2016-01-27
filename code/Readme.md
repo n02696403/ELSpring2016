@@ -1,2 +1,1 @@
-Code Directory. All your code should go here. Make sure files are named as explicitly as possible.
-
+This is the code directory, so if you're looking for code, here it is!
