@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+  <head>
+	<title> {{ title }}</title>
+	
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> 
+  </head>
+
+<body> 
+                
+               <!-- Navbar -->
+	<nav class="navbar navbar-inverse>
+	  <div class="container-fluid">
+	    <div class="navbar-brand">
+		Temperature in Bliss Hall
+	    </div>
+	<div class="pull-right">
+	  <div class="dropdown">
+		<button class="btn btn-primary dropdown-toggle" type="button" toggle="dropdown" aria-expanded="true">
+			Room
+		<span class="caret"></span>
+		</button>
+	        <ul class="dropdown-menu">
+		  <li>120</li>
+		  <li>209</li>
+	          <li>233</li>
+		</ul>
+	     </div>
+	   </div>
+ 	  </div>
+        </nav>   
+
+                  <!-- Graph part-->
+	<h1>Hello World</h1>
+	<h2> The date and time for this server is: {{ time }}</h2>
+	<h2> The time data for room 120 is {{ t }}</h2>
+	<h3> The fahrenheight temperature is {{ f }}</h3>
+
+  </body>
+</html>

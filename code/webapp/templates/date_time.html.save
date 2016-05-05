@@ -1,0 +1,10 @@
+  <!DOCTYPE html>
+  <head>
+  <title>{{ title }} </title>
+  </head>
+
+<body>
+  <h1> From the PI</h1>
+  <h2> {{ name }}: {{datetime}}</h2>
+</body>
+</html>
