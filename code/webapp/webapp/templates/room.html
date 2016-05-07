@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+  <head>
+	<title> Room Graphs </title>
+	   <script type="text/javascript" src="http://kozea.github.com/pygal.js/javascripts/svg.jquery.js"></script>
+    <script type="text/javascript" src="http://kozea.github.com/pygal.js/javascripts/pygal-tooltips.js"></script>
+	
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> 
+  </head>
+        <body>
+            <div class="container-fluid">
+
+                       <p> {{ selected }} </p>
+                    <figure>
+                         {{ chartf.render()|safe }}
+                    </figure>
+                
+
+                
+                    <figure>
+                         {{ chartc.render()|safe }}
+                    </figure>
+            </div>
+        </body>
+</html>
