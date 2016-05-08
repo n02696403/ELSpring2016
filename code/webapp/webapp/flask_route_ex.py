@@ -7,25 +7,34 @@ from pygal.style import DarkSolarizedStyle
 
 app = Flask(__name__)
 @app.route('/')
-def Chart():  
-  templateData = {
+def Chart():
+
+    templateData = {
 	'title': 'Temperature',
 	'rooms': [ "B03", "108", "120", "209", "223", "308", "323", "OUTSIDE"],
 	}
-  return render_template('main.html', **templateData)
+    return render_template('main.html', **templateData)
 
-@app.route('/roomchart', methods=['GET'])
+@app.route('/roomchart', methods=['POST', 'GET'])
 def chartByRoom():
 
-    start = str(request.form.get('start'))
-    stop = str(request.form.get('stop'))
+    #receive start, stop, and rooms selected from main.html
+    get = json.dumps(request.args)
+    get = json.loads(get)
+    start = str(get['start'])
+    stop = str(get['stop'])
     rooms = [ "B03", "108", "120", "209", "223", "308", "323", "OUTSIDE"]
+    
     selected = []
     timecount = 0
-    for room in rooms:
-      if request.form.get(room) == room:
-        selected.append(room)
 
+    #check for which rooms to request data for
+    for arg in get:
+      for room in rooms:
+        if arg == room:
+          selected.append(room)
+
+    #Generate initial graphs for celcius and farenheight
     chartf = pygal.Line(width=1200, height=600, explicit_size=True, disable_xml_declaration=True, style=DarkSolarizedStyle)
     chartf.title = "Graph of Temperatures (F) From " + start + " to " + stop
 
@@ -49,10 +58,11 @@ def chartByRoom():
         listf = []
         listc = []
         listt = []
-       
-        
+
+        #calculate how many data points to plot based on the length of the list
+        points = (len(list['info'])/144) * 12
         for x in list['info']:
-            if count < 12:
+            if count < points:
                 count += 1
                 fAvg = fAvg + float(x['tempF'])
                 cAvg = cAvg + float(x['tempC'])
@@ -74,17 +84,21 @@ def chartByRoom():
           chartc.x_labels = map(str, listt)
           timecount += 1
         
-        chartf.add("Fahrenheight", listf)
-        chartc.add("Celsius", listc)
+        chartf.add(str(checked), listf)
+        chartc.add(str(checked), listc)
 
-    return render_template('room.html', chartf=chartf, chartc=chartc, selected=selected)
+    return render_template('room.html', chartf=chartf, chartc=chartc, selected=selected, start=start, rooms=rooms)
 
       
 
-@app.route('/floorchart/<room>/<start>/<stop>')
-
+@app.route('/floorchart')
 #Plot by floor given start and stop time
-def chartByFloor(start, stop):
+def chartByFloor():
+    get = json.dumps(request.args)
+    get = json.loads(get)
+    start = str(get['start'])
+    stop = str(get['stop'])
+    
     count = 0  
     flists = []
     clists = []
@@ -202,7 +216,7 @@ def chartByFloor(start, stop):
         
     print(flists)
 
-    chartf = pygal.Line()
+    chartf = pygal.Line(width=1200, height=600, explicit_size=True, disable_xml_declaration=True, style=DarkSolarizedStyle)
     chartf.title = "Graph of Temperatures (F) By Floor From " + start + " to " + stop  
     chartf.x_labels = map(str, listt)
 
@@ -213,7 +227,7 @@ def chartByFloor(start, stop):
     chartf.render_to_file('/tmp/fchartfloor.svg')
     chartf.render()
 
-    chartc = pygal.Line()
+    chartc = pygal.Line(width=1200, height=600, explicit_size=True, disable_xml_declaration=True, style=DarkSolarizedStyle)
     chartc.title = "Graph of Temperatures (C) By Floor From " + start + " to " + stop  
     chartc.x_labels = map(str, listt)
 
@@ -223,7 +237,7 @@ def chartByFloor(start, stop):
     chartc.render_to_file('/tmp/cchartfloor.svg')
     chartc.render()
 
-    return render_template('floor.html', **templateData)
+    return render_template('floor.html', chartf=chartf, chartc=chartc)
 
 if __name__=='__main__':
-      app.run(debug=True)
+      app.run(port=80)
